@@ -1,10 +1,14 @@
 import z from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormRow } from "@/components/form-row";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { StageOne } from "@/components/stages/stage-one";
+import { useStage } from "@/components/stage-provider";
+import { StageTwo } from "@/components/stages/stage-two";
 
 const validationSchema = z
   .object({
+    /** Stage One */
     firstName: z.string().min(1, { message: "First name is required." }),
     lastName: z.string().min(1, { message: "Last name is required." }),
     email: z
@@ -16,13 +20,30 @@ const validationSchema = z
       .min(1, { message: "Email is required" })
       .email({ message: "Must be a valid email" }),
     phoneNumber: z.string().min(1, { message: "Phone number is required." }),
+    /** Stage Two */
+    testi: z.string().min(1, { message: "Testi is required." }),
   })
-  .refine((data) => data.email === data.confirmEmail, {
+  /** Stage One */
+  .refine((data) => data.firstName !== data.lastName, {
+    path: ["lastName"],
+    message: "First name and last name must be different",
+  })
+  .refine(
+    (data) =>
+      data.email.startsWith(
+        `${data.firstName.toLocaleLowerCase()}.${data.lastName.toLocaleLowerCase()}`,
+      ),
+    {
+      path: ["email"],
+      message: "Email must start with first name.last name",
+    },
+  )
+  .refine((data) => data.email !== data.confirmEmail, {
     path: ["confirmEmail"],
-    message: "Emails must match",
+    message: "Confirmation email must be different from email",
   });
 
-type ValidationSchema = z.infer<typeof validationSchema>;
+export type ValidationSchema = z.infer<typeof validationSchema>;
 
 export function Form() {
   const {
@@ -34,63 +55,20 @@ export function Form() {
     mode: "all",
   });
 
+  const { currentStage } = useStage();
+
   const onSubmit: SubmitHandler<ValidationSchema> = (data) => console.log(data);
 
   return (
     <form onSubmit={(event) => void handleSubmit(onSubmit)(event)}>
-      <FormRow
-        id="first-name"
-        label="First Name"
-        errors={errors.firstName}
-        inputProps={{
-          id: "first-name",
-          placeholder: "First Name",
-          ...register("firstName", { required: true }),
-        }}
-      />
-      <FormRow
-        id="last-name"
-        label="Last Name"
-        errors={errors.lastName}
-        inputProps={{
-          id: "last-name",
-          placeholder: "Last Name",
-          ...register("lastName", { required: true }),
-        }}
-      />
-      <FormRow
-        id="email"
-        label="Email"
-        errors={errors.email}
-        inputProps={{
-          id: "email",
-          type: "email",
-          placeholder: "Email",
-          ...register("email", { required: true }),
-        }}
-      />
-      <FormRow
-        id="confirm-email"
-        label="Confirm Email"
-        errors={errors.confirmEmail}
-        inputProps={{
-          id: "confirm-email",
-          type: "email",
-          placeholder: "Confirm Email",
-          ...register("confirmEmail", { required: true }),
-        }}
-      />
-      <FormRow
-        id="phone-number"
-        label="Phone Number"
-        errors={errors.phoneNumber}
-        inputProps={{
-          id: "phone-number",
-          type: "tel",
-          placeholder: "Phone Number",
-          ...register("phoneNumber", { required: true }),
-        }}
-      />
+      <Tabs value={currentStage.id}>
+        <TabsContent value="stage-one">
+          <StageOne register={register} errors={errors} />
+        </TabsContent>
+        <TabsContent value="stage-two">
+          <StageTwo register={register} errors={errors} />
+        </TabsContent>
+      </Tabs>
     </form>
   );
 }
