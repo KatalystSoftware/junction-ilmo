@@ -60,7 +60,10 @@ export function Form() {
   const onSubmit: SubmitHandler<ValidationSchema> = (data) => console.log(data);
 
   return (
-    <form onSubmit={(event) => void handleSubmit(onSubmit)(event)}>
+    <form
+      onSubmit={(event) => void handleSubmit(onSubmit)(event)}
+      className="w-full max-w-2xl"
+    >
       <Tabs value={currentStage.id}>
         <TabsContent value="stage-one">
           <StageOne register={register} errors={errors} />
