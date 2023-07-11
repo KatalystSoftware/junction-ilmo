@@ -1,15 +1,19 @@
+import type { FieldError } from "react-hook-form";
+import { cn } from "@/lib/utils";
+
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {}
+
 export function FormRow({
-  id,
   label,
-  name,
-  placeholder,
-  type = "text",
+  id,
+  errors,
+  inputProps,
 }: {
-  id: string;
   label: string;
-  name: string;
-  placeholder: string;
-  type?: string;
+  id: string;
+  errors?: FieldError;
+  inputProps: InputProps;
 }) {
   return (
     <p className="flex flex-col items-center bg-foreground p-6 text-background">
@@ -17,12 +21,14 @@ export function FormRow({
         {label}
       </label>
       <input
-        className="self-stretch border-b py-2 outline-none hover:border-b-2 focus-visible:border-b-2 focus-visible:border-primary"
+        className={cn(
+          "self-stretch border-b py-2 outline-none hover:border-b-2 focus-visible:border-b-2 focus-visible:border-primary",
+          errors && "border-red-500 focus-visible:border-red-500",
+        )}
         id={id}
-        name={name}
-        type={type}
-        placeholder={placeholder}
+        {...inputProps}
       />
+      {errors && <span className="text-red-500">{errors.message}</span>}
     </p>
   );
 }
