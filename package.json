@@ -3,6 +3,8 @@
   "private": true,
   "version": "0.0.3",
   "type": "module",
+  "description": "Sign up to Junction Hackathon fast!",
+  "repository": "https://github.com/KatalystSoftware/junction-ilmo",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
