@@ -7,6 +7,7 @@ export const stageTwoSchema = z
   .object({
     currentTime: z.string().min(1, { message: "Time is required." }),
     file: z.instanceof(FileList),
+    capture: z.instanceof(FileList),
   })
   .refine(
     (data) => Math.abs(Date.parse(data.currentTime) - Date.now()) < 60 * 1000, // times differ by less than a minute
@@ -53,6 +54,17 @@ export function StageTwo({
           type: "file",
           id: "file",
           ...register("file", { required: true }),
+        }}
+      />
+      <FormRow
+        id="capture"
+        label="Capture"
+        errors={errors.capture}
+        inputProps={{
+          type: "file",
+          id: "capture",
+          capture: "user",
+          ...register("capture", { required: true }),
         }}
       />
     </>
