@@ -25,7 +25,9 @@ export function StageThree({
           placeholder: "Testi2",
           ...register("testi2", { required: true }),
         }}
-      />
+      >
+        Testi info
+      </FormRow>
     </>
   );
 }

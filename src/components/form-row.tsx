@@ -9,17 +9,20 @@ export function FormRow({
   id,
   errors,
   inputProps,
+  children,
 }: {
   label: string;
   id: string;
   errors?: FieldError;
   inputProps: InputProps;
+  children?: React.ReactNode;
 }) {
   return (
     <p className="flex flex-col items-center bg-foreground p-6 text-background">
       <label className="text-lg font-bold text-background/60" htmlFor={id}>
         {label}
       </label>
+      {children}
       <input
         className={cn(
           "self-stretch border-b py-2 outline-none hover:border-b-2 focus-visible:border-b-2 focus-visible:border-primary",
