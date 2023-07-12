@@ -4,32 +4,40 @@ import { ValidationSchema } from "@/components/form";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { FormRow } from "@/components/form-row";
 
-export const stageFields = z.object({
-  currentTime: z.string().min(1, { message: "Time is required." }),
-  file: z.instanceof(FileList),
-  hackathons: z.string().ip({
-    message: "The number of attended hackathons must be a valid IP address.",
-  }),
+const stageFields = z.object({
+  platformURL: z
+    .string()
+    .min(1, { message: "Platform URL is required" })
+    .toLowerCase()
+    .includes("eu.junctionplatform.com", {
+      message: "Platform URL must be a valid Junction platform URL",
+    }),
+  motivation: z
+    .string()
+    .min(1, { message: "Motivation is required" })
+    .min(2000, { message: "Motivation must be at least 2000 characters long" })
+    .includes("Junction is my favourite hackathon.", {
+      message: "Motivation must include 'Junction is my favourite hackathon.'",
+    })
+    .startsWith("I want to attend Junction because", {
+      message: "Motivation must start with 'I want to attend Junction because'",
+    })
+    .endsWith("I'm here just for the free food.", {
+      message: "Motivation must end with 'I'm here just for the free food.'",
+    }),
+  diet: z
+    .string()
+    .min(1, {
+      message: "Dietary restrictions are required, you must have one.",
+    })
+    .emoji({ message: "Dietary restrictions must be specified with emojis." })
+    .includes("🥦", { message: "Dietary restrictions must include '🥦'" })
+    .min(48, {
+      message: "Dietary restrictions must be at least 48 characters long",
+    }),
 });
 
-export const stageTwoSchema = stageFields
-  .refine(
-    (data) => Math.abs(Date.parse(data.currentTime) - Date.now()) < 60 * 1000, // times differ by less than a minute
-    {
-      path: ["currentTime"],
-      message: "Time must be the current time.",
-    },
-  )
-  .refine(
-    (data) => {
-      const file = data.file[0];
-      return !!file && file.size > 1000000000;
-    },
-    {
-      path: ["file"],
-      message: "Must be at least 1 GB.",
-    },
-  );
+export const stageTwoSchema = stageFields;
 
 const stageSchemaKeys = Object.keys(stageFields.shape);
 
@@ -60,34 +68,33 @@ export function StageTwo({
   return (
     <>
       <FormRow
-        id="time"
-        label="Current time"
-        errors={errors.currentTime}
+        id="platformURL"
+        label="We recently changed the URL of our Junction platform. What's the URL of the new platform?"
+        errors={errors.platformURL}
         inputProps={{
-          type: "datetime-local",
-          id: "time",
-          placeholder: "Current time",
-          ...register("currentTime", { required: true }),
+          id: "platformURL",
+          placeholder: "Platform URL",
+          ...register("platformURL", { required: true }),
         }}
       />
       <FormRow
-        id="file"
-        label="File of at least 1 GB"
-        errors={errors.file}
+        id="motivation"
+        label="Why do you want to be accepted to this hackathon, and why should we choose you? Please note that we regard a well-written letter of motivation very highly when reviewing applications."
+        errors={errors.motivation}
         inputProps={{
-          type: "file",
-          id: "file",
-          ...register("file", { required: true }),
+          id: "motivation",
+          placeholder: "Motivation",
+          ...register("motivation", { required: true }),
         }}
       />
       <FormRow
-        id="hackathons"
-        label="The number of hackathons you've attended"
-        errors={errors.hackathons}
+        id="diet"
+        label="What are your dietary restrictions?"
+        errors={errors.diet}
         inputProps={{
-          id: "hackathons",
-          placeholder: "Hackathons",
-          ...register("hackathons", { required: true }),
+          id: "diet",
+          placeholder: "Dietary Restrictions",
+          ...register("diet", { required: true }),
         }}
       />
     </>

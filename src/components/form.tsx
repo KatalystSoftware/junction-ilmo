@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useStage } from "@/components/stage-provider";
 import { StageOne, stageOneSchema } from "@/components/stages/stage-one";
+import { StageThree, stageThreeSchema } from "@/components/stages/stage-three";
 import { StageTwo, stageTwoSchema } from "@/components/stages/stage-two";
-import { StageThree, stageThreeSchema } from "./stages/stage-three";
 import { StageFour, stageFourSchema } from "./stages/stage-four";
 import { StageFive, stageFiveSchema } from "./stages/stage-five";
 

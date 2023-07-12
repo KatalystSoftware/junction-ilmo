@@ -5,39 +5,37 @@ import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { FormRow } from "@/components/form-row";
 
 const stageFields = z.object({
-  platformURL: z
-    .string()
-    .min(1, { message: "Platform URL is required" })
-    .toLowerCase()
-    .includes("eu.junctionplatform.com", {
-      message: "Platform URL must be a valid Junction platform URL",
-    }),
-  motivation: z
-    .string()
-    .min(1, { message: "Motivation is required" })
-    .min(2000, { message: "Motivation must be at least 2000 characters long" })
-    .includes("Junction is my favourite hackathon.", {
-      message: "Motivation must include 'Junction is my favourite hackathon.'",
-    })
-    .startsWith("I want to attend Junction because", {
-      message: "Motivation must start with 'I want to attend Junction because'",
-    })
-    .endsWith("I'm here just for the free food.", {
-      message: "Motivation must end with 'I'm here just for the free food.'",
-    }),
-  diet: z
-    .string()
-    .min(1, {
-      message: "Dietary restrictions are required, you must have one.",
-    })
-    .emoji({ message: "Dietary restrictions must be specified with emojis." })
-    .includes("🥦", { message: "Dietary restrictions must include '🥦'" })
-    .min(48, {
-      message: "Dietary restrictions must be at least 48 characters long",
-    }),
+  currentTime: z.string().min(1, { message: "Time is required." }),
+  file: z.instanceof(FileList),
+  hackathons: z.string().ip({
+    message: "The number of attended hackathons must be a valid IP address.",
+  }),
 });
 
-export const stageThreeSchema = stageFields;
+export const stageThreeSchema = stageFields
+  .refine(
+    (data) => Math.abs(Date.parse(data.currentTime) - Date.now()) < 60 * 1000, // times differ by less than a minute
+    {
+      path: ["currentTime"],
+      message: "Time must be the current time.",
+    },
+  )
+  .refine((data) => data.file.length === 1, {
+    path: ["file"],
+    message: "You must upload exactly one file.",
+  })
+  .refine(
+    (data) => {
+      const file = data.file[0];
+      return (
+        !!file && file.type.split("/")[0] === "video" && file.size > 1000000000
+      );
+    },
+    {
+      path: ["file"],
+      message: "Your video CV must be more than 1GB.",
+    },
+  );
 
 const stageSchemaKeys = Object.keys(stageFields.shape);
 
@@ -68,33 +66,34 @@ export function StageThree({
   return (
     <>
       <FormRow
-        id="platformURL"
-        label="We recently changed the URL of our Junction platform. What's the URL of the new platform?"
-        errors={errors.platformURL}
+        id="time"
+        label="Current time at the time of submission"
+        errors={errors.currentTime}
         inputProps={{
-          id: "platformURL",
-          placeholder: "Platform URL",
-          ...register("platformURL", { required: true }),
+          type: "datetime-local",
+          id: "time",
+          placeholder: "Current time",
+          ...register("currentTime", { required: true }),
         }}
       />
       <FormRow
-        id="motivation"
-        label="Why do you want to be accepted to this hackathon, and why should we choose you? Please note that we regard a well-written letter of motivation very highly when reviewing applications."
-        errors={errors.motivation}
+        id="file"
+        label="Video CV, why you should be accepted to Junction"
+        errors={errors.file}
         inputProps={{
-          id: "motivation",
-          placeholder: "Motivation",
-          ...register("motivation", { required: true }),
+          type: "file",
+          id: "file",
+          ...register("file", { required: true }),
         }}
       />
       <FormRow
-        id="diet"
-        label="What are your dietary restrictions?"
-        errors={errors.diet}
+        id="hackathons"
+        label="The number of hackathons you've attended"
+        errors={errors.hackathons}
         inputProps={{
-          id: "diet",
-          placeholder: "Dietary Restrictions",
-          ...register("diet", { required: true }),
+          id: "hackathons",
+          placeholder: "Hackathons",
+          ...register("hackathons", { required: true }),
         }}
       />
     </>
