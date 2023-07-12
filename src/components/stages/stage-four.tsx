@@ -112,6 +112,8 @@ export function StageFour({
           ...register("robloxName", { required: true }),
         }}
       >
+
+        <span className="bg-gray-600 text-white text-xs font-medium my-3 px-2.5 py-0.5 rounded">SPONSORED LISTING</span>
         <a
           target="_blank"
           className="bg-gray-600 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded"
