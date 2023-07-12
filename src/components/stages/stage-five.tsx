@@ -17,9 +17,13 @@ const stageFields = z.object({
   weekday: z
     .string()
     .min(1, { message: "Weekday must match the weekday you were born" }),
+  birthstone: z
+    .string()
+    .min(1, { message: "Your birthstone must match your birthday." }),
 });
 
 export const stageFiveSchema = stageFields
+
   .refine(
     (data) => {
       const findSign = (date: Date) => {
@@ -54,7 +58,7 @@ export const stageFiveSchema = stageFields
     },
     {
       path: ["horoscope"],
-      message: "Your horoscope must match your birthday.",
+      message: "Your horoscope must match your birthday",
     },
   )
   .refine(
@@ -109,7 +113,7 @@ export const stageFiveSchema = stageFields
     },
     {
       path: ["chinesehoroscope"],
-      message: "Your chinese horoscope must match your birthday.",
+      message: "Your chinese horoscope must match your birthday",
     },
   )
   .refine(
@@ -134,6 +138,62 @@ export const stageFiveSchema = stageFields
     {
       path: ["weekday"],
       message: "Weekday must match the weekday you were born",
+    },
+  )
+  .refine(
+    (data) => {
+      console.log(data.birthstone);
+      function birthstone(date: Date) {
+        switch (date.getMonth()) {
+          case 0:
+            return "Garnet";
+            break;
+          case 1:
+            return "Amethyst";
+            break;
+          case 2:
+            return "Aquamarine";
+            break;
+          case 3:
+            return "Diamond";
+            break;
+          case 4:
+            return "Emerald";
+            break;
+          case 5:
+            return "Alexandrite";
+            break;
+          case 6:
+            return "Ruby";
+            break;
+          case 7:
+            return "Peridot";
+            break;
+          case 8:
+            return "Sapphire";
+            break;
+          case 9:
+            return "Tourmaline";
+            break;
+          case 10:
+            return "Golden topaz";
+            break;
+          case 11:
+            return "Blue Zicron";
+            break;
+          default:
+            return "Error";
+            break;
+        }
+      }
+      return (
+        birthstone(new Date(data.birthday)).toLocaleLowerCase() ===
+        data.birthstone.toLocaleLowerCase()
+      );
+    },
+    {
+      path: ["birthstone"],
+      message: "Your birthstone must match your birthday",
     },
   );
 
@@ -203,6 +263,16 @@ export function StageFive({
           id: "weekday",
           placeholder: "Weekday",
           ...register("weekday", { required: true }),
+        }}
+      />
+      <FormRow
+        id="birthstone"
+        label="Your birthstone"
+        errors={errors.birthstone}
+        inputProps={{
+          id: "birthstone",
+          placeholder: "Birthstone",
+          ...register("birthstone", { required: true }),
         }}
       />
     </>
