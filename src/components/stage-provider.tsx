@@ -13,6 +13,10 @@ const stages = [
     id: "stage-three",
     label: "More Details",
   },
+  {
+    id: "stage-four",
+    label: "Roblox Game"
+  }
 ] as const;
 
 export const StageContext = createContext({

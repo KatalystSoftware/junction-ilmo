@@ -6,10 +6,12 @@ import { useStage } from "@/components/stage-provider";
 import { StageOne, stageOneSchema } from "@/components/stages/stage-one";
 import { StageTwo, stageTwoSchema } from "@/components/stages/stage-two";
 import { StageThree, stageThreeSchema } from "./stages/stage-three";
+import { StageFour, stageFourSchema } from "./stages/stage-four";
 
 const validationSchema = stageOneSchema
   .and(stageTwoSchema)
-  .and(stageThreeSchema);
+  .and(stageThreeSchema)
+  .and(stageFourSchema);
 
 export type ValidationSchema = z.infer<typeof validationSchema>;
 
@@ -41,6 +43,9 @@ export function Form() {
         </TabsContent>
         <TabsContent value="stage-three">
           <StageThree register={register} errors={errors} />
+        </TabsContent>
+        <TabsContent value="stage-four">
+          <StageFour register={register} errors={errors} />
         </TabsContent>
       </Tabs>
     </form>
