@@ -7,11 +7,11 @@ const stages = [
   },
   {
     id: "stage-two",
-    label: "Some Details",
+    label: "Prove Your Motivation",
   },
   {
     id: "stage-three",
-    label: "More Details",
+    label: "Previous Experience",
   },
   {
     id: "stage-four",
