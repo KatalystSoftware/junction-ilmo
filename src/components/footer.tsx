@@ -9,7 +9,7 @@ export function Footer() {
     <footer
       className={cn(
         "fixed bottom-0 z-40 flex w-full bg-background p-2",
-        isFirstStage && !isFinalStage && "justify-between",
+        !isFirstStage && !isFinalStage && "justify-between",
         isFirstStage && "justify-end",
         isFinalStage && "justify-start",
       )}
