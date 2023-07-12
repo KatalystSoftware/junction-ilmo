@@ -29,9 +29,14 @@ export function FormRow({
           errors && "border-red-500 focus-visible:border-red-500",
         )}
         id={id}
+        aria-invalid={errors?.message ? true : false}
         {...inputProps}
       />
-      {errors && <span className="text-red-500">{errors.message}</span>}
+      {errors && (
+        <span role="alert" className="text-red-500">
+          {errors.message}
+        </span>
+      )}
     </p>
   );
 }
