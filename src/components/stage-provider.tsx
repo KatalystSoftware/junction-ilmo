@@ -19,7 +19,7 @@ const stages = [
   },
   {
     id: "stage-five",
-    label: "More info about you",
+    label: "Personality Traits",
   },
 ] as const;
 
