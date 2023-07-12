@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { useStage } from "@/components/stage-provider";
 import { cn } from "@/lib/utils";
 
@@ -9,9 +9,7 @@ export function Footer() {
     <footer
       className={cn(
         "fixed bottom-0 z-40 flex w-full bg-background p-2",
-        !isFirstStage && !isFinalStage && "justify-between",
-        isFirstStage && "justify-end",
-        isFinalStage && "justify-start",
+        isFirstStage ? "justify-end" : "justify-between",
       )}
     >
       {!isFirstStage && (
@@ -25,11 +23,20 @@ export function Footer() {
       )}
       {!isFinalStage && (
         <button
-          className="flex items-center gap-1 rounded-lg bg-primary px-6 py-1 font-bold text-primary-foreground"
+          className="flex items-center gap-1 rounded-lg bg-primary px-6 py-1 font-bold text-primary-foreground disabled:bg-foreground/20 disabled:text-background"
           onClick={toNextStage}
         >
           <span>Next</span>
           <ArrowRight className="h-4 w-4" />
+        </button>
+      )}
+      {isFinalStage && (
+        <button
+          className="flex items-center gap-1 rounded-lg bg-primary px-6 py-1 font-bold text-primary-foreground disabled:bg-foreground/20 disabled:text-background"
+          disabled
+        >
+          <span>Submit</span>
+          <Check className="h-4 w-4" />
         </button>
       )}
     </footer>
