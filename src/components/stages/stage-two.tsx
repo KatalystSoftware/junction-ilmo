@@ -18,7 +18,7 @@ export const stageTwoSchema = z
   .refine(
     (data) => {
       const file = data.file[0];
-      return file.size > 1000000000;
+      return !!file && file.size > 1000000000;
     },
     {
       path: ["file"],
