@@ -20,7 +20,6 @@ export const stageFiveSchema = z
   })
   .refine(
     (data) => {
-      console.log(data.horoscope);
       const findSign = (date: Date) => {
         const days = [21, 20, 21, 21, 22, 22, 23, 24, 24, 24, 23, 22];
         const signs = [
@@ -58,7 +57,6 @@ export const stageFiveSchema = z
   )
   .refine(
     (data) => {
-      console.log(data.chineseHoroscope);
       function findChineseSign(date: Date) {
         switch (date.getFullYear() % 12) {
           case 0:
@@ -114,7 +112,6 @@ export const stageFiveSchema = z
   )
   .refine(
     (data) => {
-      console.log(data.weekday);
       const isWeekdayCorrect = (date: Date) => {
         const weekdays = [
           "Monday",
