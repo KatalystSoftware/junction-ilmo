@@ -2,6 +2,8 @@
 
 Sign up to Junction Hackathon fast!
 
+Find the Roblox game here: https://www.roblox.com/games/5980231041/SERVE-TIME-IN-PRISON-AND-GET-A-BADGE
+
 ## Play Now!
 
 Try to [sign up](https://junction-ilmo.vercel.app/) to Junction 2023 as fast as you can
