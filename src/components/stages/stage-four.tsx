@@ -35,6 +35,37 @@ const getUsernameID = async (username: String): Promise<number> => {
   }
 };
 
+const getUserDisplayname = async (username: String): Promise<String> => {
+  try {
+    const url = "https://corsproxy.io/?" +
+      encodeURIComponent("https://users.roblox.com/v1/usernames/users");
+    const response = await fetch(
+      url,
+      {
+        method: "POST",
+        headers: {
+          "accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          usernames: [username],
+          excludeBannedUsers: true,
+        }),
+      },
+    );
+
+    const userData = await response.json();
+    if (userData["data"].length > 0) {
+      return userData["data"][0].displayName;
+    } else {
+      return "";
+    }
+  } catch (error) {
+    console.error("Error occurred while retrieving user data:", error);
+    return "";
+  }
+};
+
 const checkIfBadge = async (
   userID: number,
   badgeID: number,
@@ -76,6 +107,7 @@ const checkIfBadge = async (
 
 export const stageFourSchema = z.object({
   robloxName: z.string().min(1, { message: "Roblox username is required." }),
+  robloxName2: z.string().min(1, { message: "Roblox username is required." }),
 })
   .refine(async (data) => {
     const id = await getUsernameID(data.robloxName);
@@ -91,6 +123,22 @@ export const stageFourSchema = z.object({
   }, {
     path: ["robloxName"],
     message: "Roblox user has not beaten the game.",
+  })
+  .refine(async (data) => {
+    const id = await getUsernameID(data.robloxName2);
+    return id !== -1;
+  }, {
+    path: ["robloxName2"],
+    message: "Roblox username must be valid.",
+  })
+  .refine(async (data) => {
+    const id = await getUsernameID(data.robloxName2);
+    if (id == -1) return false;
+    const displayName = await getUserDisplayname(data.robloxName2);
+    return displayName.toLowerCase().includes("junction");
+  }, {
+    path: ["robloxName2"],
+    message: "Roblox user does not have Junction in their display name.",
   });
 
 export function StageFour({
@@ -112,8 +160,9 @@ export function StageFour({
           ...register("robloxName", { required: true }),
         }}
       >
-
-        <span className="bg-gray-600 text-white text-xs font-medium my-3 px-2.5 py-0.5 rounded">SPONSORED LISTING</span>
+        <span className="bg-gray-600 text-white text-xs font-medium my-3 px-2.5 py-0.5 rounded">
+          SPONSORED LISTING
+        </span>
         <a
           target="_blank"
           className="bg-gray-600 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded"
@@ -121,6 +170,20 @@ export function StageFour({
         >
           Game link
         </a>
+      </FormRow>
+      <FormRow
+        id="robloxName2"
+        label="Insert the name of a Roblox account whose display name contains Junction."
+        errors={errors.robloxName2}
+        inputProps={{
+          id: "robloxName2",
+          placeholder: "Roblox Username",
+          ...register("robloxName2", { required: true }),
+        }}
+      >
+        <span className="bg-gray-600 text-white text-xs font-medium my-3 px-2.5 py-0.5 rounded">
+          SPONSORED LISTING
+        </span>
       </FormRow>
     </>
   );
