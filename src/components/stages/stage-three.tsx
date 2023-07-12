@@ -3,11 +3,11 @@ import { ValidationSchema } from "@/components/form";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { FormRow } from "@/components/form-row";
 
-export const stageTwoSchema = z.object({
-  testi: z.string().min(1, { message: "Testi is required." }),
+export const stageThreeSchema = z.object({
+  testi2: z.string().min(1, { message: "Testi2 is required." }),
 });
 
-export function StageTwo({
+export function StageThree({
   register,
   errors,
 }: {
@@ -17,13 +17,13 @@ export function StageTwo({
   return (
     <>
       <FormRow
-        id="testi"
-        label="Testi"
-        errors={errors.testi}
+        id="testi2"
+        label="Testi2"
+        errors={errors.testi2}
         inputProps={{
-          id: "testi",
-          placeholder: "Testi",
-          ...register("testi", { required: true }),
+          id: "testi2",
+          placeholder: "Testi2",
+          ...register("testi2", { required: true }),
         }}
       />
     </>

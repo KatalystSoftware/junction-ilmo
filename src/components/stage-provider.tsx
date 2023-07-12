@@ -9,6 +9,10 @@ const stages = [
     id: "stage-two",
     label: "Some Details",
   },
+  {
+    id: "stage-three",
+    label: "More Details",
+  },
 ] as const;
 
 export const StageContext = createContext({

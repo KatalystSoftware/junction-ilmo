@@ -2,46 +2,14 @@ import z from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { StageOne } from "@/components/stages/stage-one";
 import { useStage } from "@/components/stage-provider";
-import { StageTwo } from "@/components/stages/stage-two";
+import { StageOne, stageOneSchema } from "@/components/stages/stage-one";
+import { StageTwo, stageTwoSchema } from "@/components/stages/stage-two";
+import { StageThree, stageThreeSchema } from "./stages/stage-three";
 
-const validationSchema = z
-  .object({
-    /** Stage One */
-    firstName: z.string().min(1, { message: "First name is required." }),
-    lastName: z.string().min(1, { message: "Last name is required." }),
-    email: z
-      .string()
-      .min(1, { message: "Email is required" })
-      .email({ message: "Must be a valid email" }),
-    confirmEmail: z
-      .string()
-      .min(1, { message: "Email is required" })
-      .email({ message: "Must be a valid email" }),
-    phoneNumber: z.string().min(1, { message: "Phone number is required." }),
-    /** Stage Two */
-    testi: z.string().min(1, { message: "Testi is required." }),
-  })
-  /** Stage One */
-  .refine((data) => data.firstName !== data.lastName, {
-    path: ["lastName"],
-    message: "First name and last name must be different",
-  })
-  .refine(
-    (data) =>
-      data.email.startsWith(
-        `${data.firstName.toLocaleLowerCase()}.${data.lastName.toLocaleLowerCase()}`,
-      ),
-    {
-      path: ["email"],
-      message: "Email must start with first name.last name",
-    },
-  )
-  .refine((data) => data.email !== data.confirmEmail, {
-    path: ["confirmEmail"],
-    message: "Confirmation email must be different from email",
-  });
+const validationSchema = stageOneSchema
+  .and(stageTwoSchema)
+  .and(stageThreeSchema);
 
 export type ValidationSchema = z.infer<typeof validationSchema>;
 
@@ -70,6 +38,9 @@ export function Form() {
         </TabsContent>
         <TabsContent value="stage-two">
           <StageTwo register={register} errors={errors} />
+        </TabsContent>
+        <TabsContent value="stage-three">
+          <StageThree register={register} errors={errors} />
         </TabsContent>
       </Tabs>
     </form>
