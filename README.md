@@ -4,7 +4,7 @@ Sign up to Junction Hackathon fast!
 
 ## Play Now!
 
-Try to [sign up](https://junction-ilmo.vercel.app/) to Stupid Hack 2023 as fast as you can
+Try to [sign up](https://junction-ilmo.vercel.app/) to Junction 2023 as fast as you can
 
 ## Development
 
