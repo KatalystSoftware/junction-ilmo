@@ -12,6 +12,12 @@ export const stageThreeSchema = z.object({
     .min(2000, { message: "Motivation must be at least 2000 characters long" })
     .includes("Junction is my favourite hackathon.", {
       message: "Motivation must include 'Junction is my favourite hackathon.'",
+    })
+    .startsWith("I want to attend Junction because", {
+      message: "Motivation must start with 'I want to attend Junction because'",
+    })
+    .endsWith("I'm here just for the free food.", {
+      message: "Motivation must end with 'I'm here just for the free food.'",
     }),
   diet: z.string().min(1, {
     message: "Dietary restrictions are required, you must have one.",
