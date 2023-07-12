@@ -219,7 +219,7 @@ export function StageFive({
     );
 
     if (hasTouchedAllStageValues && !hasStageErrors) {
-      onPassStage();
+      alert("You win!");
     }
   }, [errors, touchedFields, onPassStage]);
 
