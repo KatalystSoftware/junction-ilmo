@@ -4,7 +4,8 @@ import { Form } from "@/components/form";
 import { useStage } from "@/components/stage-provider";
 
 function App() {
-  const { currentStage } = useStage();
+  const { currentStage, onPassStage } = useStage();
+
   return (
     <div className="relative flex min-h-screen flex-col">
       <Header />
@@ -13,7 +14,7 @@ function App() {
           <h3 className="text-center text-2xl uppercase">
             {currentStage.label}
           </h3>
-          <Form />
+          <Form onPassStage={onPassStage} />
         </main>
         <Footer />
       </div>

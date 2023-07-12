@@ -30,6 +30,7 @@ export const StageContext = createContext({
   finalStage: stages.length - 1,
   toNextStage: () => console.log("next stage"),
   toPrevStage: () => console.log("prev stage"),
+  onPassStage: (stage: number) => console.log("pass stage", stage),
 });
 
 export function StageProvider({ children }: { children: React.ReactNode }) {
@@ -38,11 +39,14 @@ export function StageProvider({ children }: { children: React.ReactNode }) {
 
   const toNextStage = () => {
     setCurrentStage((prev) => prev + 1);
-    setFurthestStage((prev) => Math.max(prev, currentStage + 1));
   };
 
   const toPrevStage = () => {
     setCurrentStage((prev) => prev - 1);
+  };
+
+  const onPassStage = (stage: number) => {
+    setFurthestStage((prev) => Math.max(prev, stage + 1));
   };
 
   return (
@@ -54,6 +58,7 @@ export function StageProvider({ children }: { children: React.ReactNode }) {
         finalStage: stages.length - 1,
         toNextStage,
         toPrevStage,
+        onPassStage,
       }}
     >
       {children}

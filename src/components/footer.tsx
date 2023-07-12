@@ -3,7 +3,14 @@ import { useStage } from "@/components/stage-provider";
 import { cn } from "@/lib/utils";
 
 export function Footer() {
-  const { isFirstStage, isFinalStage, toNextStage, toPrevStage } = useStage();
+  const {
+    isFirstStage,
+    isFinalStage,
+    toNextStage,
+    toPrevStage,
+    currentStage,
+    furthestStage,
+  } = useStage();
 
   return (
     <footer
@@ -25,6 +32,7 @@ export function Footer() {
         <button
           className="flex items-center gap-1 rounded-lg bg-primary px-6 py-1 font-bold text-primary-foreground disabled:bg-foreground/20 disabled:text-background"
           onClick={toNextStage}
+          disabled={currentStage.id === furthestStage.id}
         >
           <span>Next</span>
           <ArrowRight className="h-4 w-4" />

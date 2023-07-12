@@ -1,14 +1,18 @@
+import { useEffect } from "react";
 import z from "zod";
 import { ValidationSchema } from "@/components/form";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { FormRow } from "@/components/form-row";
 
-export const stageTwoSchema = z
-  .object({
-    currentTime: z.string().min(1, { message: "Time is required." }),
-    file: z.instanceof(FileList),
-    hackathons: z.string().ip({message: "The number of attended hackathons must be a valid IP address."})
-  })
+export const stageFields = z.object({
+  currentTime: z.string().min(1, { message: "Time is required." }),
+  file: z.instanceof(FileList),
+  hackathons: z.string().ip({
+    message: "The number of attended hackathons must be a valid IP address.",
+  }),
+});
+
+export const stageTwoSchema = stageFields
   .refine(
     (data) => Math.abs(Date.parse(data.currentTime) - Date.now()) < 60 * 1000, // times differ by less than a minute
     {
@@ -26,13 +30,33 @@ export const stageTwoSchema = z
       message: "Must be at least 1 GB.",
     },
   );
+
+const stageSchemaKeys = Object.keys(stageFields.shape);
+
 export function StageTwo({
+  touchedFields,
   register,
   errors,
+  onPassStage,
 }: {
+  touchedFields: Partial<Readonly<{ [K in keyof ValidationSchema]?: boolean }>>;
   register: UseFormRegister<ValidationSchema>;
   errors: FieldErrors<ValidationSchema>;
+  onPassStage: () => void;
 }) {
+  useEffect(() => {
+    const hasStageErrors = stageSchemaKeys.some(
+      (key) => !!errors[key as keyof typeof errors],
+    );
+    const hasTouchedAllStageValues = stageSchemaKeys.every(
+      (key) => !!touchedFields[key as keyof typeof touchedFields],
+    );
+
+    if (hasTouchedAllStageValues && !hasStageErrors) {
+      onPassStage();
+    }
+  }, [errors, touchedFields, onPassStage]);
+
   return (
     <>
       <FormRow

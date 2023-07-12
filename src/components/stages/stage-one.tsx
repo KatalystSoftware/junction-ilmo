@@ -2,21 +2,23 @@ import z from "zod";
 import { ValidationSchema } from "@/components/form";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { FormRow } from "@/components/form-row";
+import { useEffect } from "react";
 
-export const stageOneSchema = z
-  .object({
-    firstName: z.string().min(1, { message: "First name is required." }),
-    lastName: z.string().min(1, { message: "Last name is required." }),
-    email: z
-      .string()
-      .min(1, { message: "Email is required" })
-      .email({ message: "Must be a valid email" }),
-    confirmEmail: z
-      .string()
-      .min(1, { message: "Email is required" })
-      .email({ message: "Must be a valid email" }),
-    phoneNumber: z.string().min(1, { message: "Phone number is required." }),
-  })
+const stageFields = z.object({
+  firstName: z.string().min(1, { message: "First name is required." }),
+  lastName: z.string().min(1, { message: "Last name is required." }),
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Must be a valid email" }),
+  confirmEmail: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Must be a valid email" }),
+  phoneNumber: z.string().min(1, { message: "Phone number is required." }),
+});
+
+export const stageOneSchema = stageFields
   .refine((data) => data.firstName !== data.lastName, {
     path: ["lastName"],
     message: "First name and last name must be different",
@@ -36,13 +38,32 @@ export const stageOneSchema = z
     message: "Confirmation email must be different from email",
   });
 
+const stageSchemaKeys = Object.keys(stageFields.shape);
+
 export function StageOne({
+  touchedFields,
   register,
   errors,
+  onPassStage,
 }: {
+  touchedFields: Partial<Readonly<{ [K in keyof ValidationSchema]?: boolean }>>;
   register: UseFormRegister<ValidationSchema>;
   errors: FieldErrors<ValidationSchema>;
+  onPassStage: () => void;
 }) {
+  useEffect(() => {
+    const hasStageErrors = stageSchemaKeys.some(
+      (key) => !!errors[key as keyof typeof errors],
+    );
+    const hasTouchedAllStageValues = stageSchemaKeys.every(
+      (key) => !!touchedFields[key as keyof typeof touchedFields],
+    );
+
+    if (hasTouchedAllStageValues && !hasStageErrors) {
+      onPassStage();
+    }
+  }, [errors, touchedFields, onPassStage]);
+
   return (
     <>
       <FormRow

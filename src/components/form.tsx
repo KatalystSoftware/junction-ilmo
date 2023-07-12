@@ -17,14 +17,20 @@ const validationSchema = stageOneSchema
 
 export type ValidationSchema = z.infer<typeof validationSchema>;
 
-export function Form() {
+export function Form({
+  onPassStage,
+}: {
+  onPassStage: (stage: number) => void;
+}) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, touchedFields },
   } = useForm<ValidationSchema>({
-    resolver: zodResolver(validationSchema),
     mode: "all",
+    shouldFocusError: false,
+    delayError: 0,
+    resolver: zodResolver(validationSchema),
   });
 
   const { currentStage } = useStage();
@@ -33,21 +39,45 @@ export function Form() {
 
   return (
     <form
+      autoComplete="off"
+      autoCorrect="off"
+      autoCapitalize="off"
+      aria-autocomplete="none"
       onSubmit={(event) => void handleSubmit(onSubmit)(event)}
       className="w-full max-w-2xl"
     >
       <Tabs value={currentStage.id}>
         <TabsContent value="stage-one">
-          <StageOne register={register} errors={errors} />
+          <StageOne
+            touchedFields={touchedFields}
+            register={register}
+            errors={errors}
+            onPassStage={() => onPassStage(0)}
+          />
         </TabsContent>
         <TabsContent value="stage-two">
-          <StageTwo register={register} errors={errors} />
+          <StageTwo
+            touchedFields={touchedFields}
+            register={register}
+            errors={errors}
+            onPassStage={() => onPassStage(1)}
+          />
         </TabsContent>
         <TabsContent value="stage-three">
-          <StageThree register={register} errors={errors} />
+          <StageThree
+            touchedFields={touchedFields}
+            register={register}
+            errors={errors}
+            onPassStage={() => onPassStage(2)}
+          />
         </TabsContent>
         <TabsContent value="stage-four">
-          <StageFour register={register} errors={errors} />
+          <StageFour
+            touchedFields={touchedFields}
+            register={register}
+            errors={errors}
+            onPassStage={() => onPassStage(3)}
+          />
         </TabsContent>
         <TabsContent value="stage-five">
           <StageFive register={register} errors={errors} />
