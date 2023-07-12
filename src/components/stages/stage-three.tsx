@@ -27,9 +27,7 @@ export const stageThreeSchema = stageFields
   .refine(
     (data) => {
       const file = data.file[0];
-      return (
-        !!file && file.type.split("/")[0] === "video" && file.size > 1000000000
-      );
+      return !!file && file.size > 1000000000;
     },
     {
       path: ["file"],
