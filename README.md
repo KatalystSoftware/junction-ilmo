@@ -8,7 +8,20 @@ Try to [sign up](https://junction-ilmo.vercel.app/) to Stupid Hack 2023 as fast 
 
 ## Development
 
+Pre-requisites:
+
+- install [nvm](https://github.com/nvm-sh/nvm)
+
 ```bash
+# install node 18
+nvm install 18
+
+# use node 18
+nvm use 18
+
+# install pnpm
+npm install -g pnpm
+
 # install dependencies
 pnpm install
 
