@@ -11,6 +11,9 @@ export const stageFiveSchema = z
     horoscope: z
       .string()
       .min(1, { message: "Your horoscope must match your birthday" }),
+    chineseHoroscope: z
+      .string()
+      .min(1, { message: "Your Chinese horoscope must match your birthday" }),
     weekday: z
       .string()
       .min(1, { message: "Weekday must match the weekday you were born" }),
@@ -51,6 +54,62 @@ export const stageFiveSchema = z
     {
       path: ["horoscope"],
       message: "Your horoscope must match your birthday.",
+    },
+  )
+  .refine(
+    (data) => {
+      console.log(data.chineseHoroscope);
+      function findChineseSign(date: Date) {
+        switch (date.getFullYear() % 12) {
+          case 0:
+            return "Monkey";
+            break;
+          case 1:
+            return "Rooster";
+            break;
+          case 2:
+            return "Dog";
+            break;
+          case 3:
+            return "Pig";
+            break;
+          case 4:
+            return "Rat";
+            break;
+          case 5:
+            return "Ox";
+            break;
+          case 6:
+            return "Tiger";
+            break;
+          case 7:
+            return "Rabbit";
+            break;
+          case 8:
+            return "Dragon";
+            break;
+          case 9:
+            return "Snake";
+            break;
+          case 10:
+            return "Horse";
+            break;
+          case 11:
+            return "Sheep";
+            break;
+          default:
+            return "Error";
+            break;
+        }
+      }
+      return (
+        findChineseSign(new Date(data.birthday)).toLocaleLowerCase() ===
+        data.chineseHoroscope.toLocaleLowerCase()
+      );
+    },
+    {
+      path: ["chinesehoroscope"],
+      message: "Your chinese horoscope must match your birthday.",
     },
   )
   .refine(
@@ -106,6 +165,16 @@ export function StageFive({
           id: "horoscope",
           placeholder: "Horoscope",
           ...register("horoscope", { required: true }),
+        }}
+      />
+      <FormRow
+        id="chineseHoroscope"
+        label="Your Chinese horoscope"
+        errors={errors.chineseHoroscope}
+        inputProps={{
+          id: "chineseHoroscope",
+          placeholder: "Chinese horoscope",
+          ...register("chineseHoroscope", { required: true }),
         }}
       />
       <FormRow
