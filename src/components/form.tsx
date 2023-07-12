@@ -35,7 +35,7 @@ export function Form({
 
   const { currentStage } = useStage();
 
-  const onSubmit: SubmitHandler<ValidationSchema> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<ValidationSchema> = () => alert("you did it");
 
   return (
     <form
@@ -80,7 +80,12 @@ export function Form({
           />
         </TabsContent>
         <TabsContent value="stage-five">
-          <StageFive register={register} errors={errors} />
+          <StageFive
+            touchedFields={touchedFields}
+            register={register}
+            errors={errors}
+            onPassStage={() => onPassStage(4)}
+          />
         </TabsContent>
       </Tabs>
     </form>

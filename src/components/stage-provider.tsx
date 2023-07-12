@@ -74,6 +74,7 @@ export function useStage() {
   const nextStage =
     stages[Math.min(context.currentStage + 1, context.stageCount - 1)];
   const furthestStage = stages[context.furthestStage];
+  const finalStage = stages[context.finalStage];
 
   const isFirstStage = context.currentStage === 0;
   const isFinalStage = context.currentStage === context.finalStage;
@@ -83,6 +84,7 @@ export function useStage() {
     prevStage,
     currentStage,
     nextStage,
+    finalStage,
     furthestStage,
     isFirstStage,
     isFinalStage,

@@ -10,6 +10,7 @@ export function Footer() {
     toPrevStage,
     currentStage,
     furthestStage,
+    finalStage,
   } = useStage();
 
   return (
@@ -41,7 +42,7 @@ export function Footer() {
       {isFinalStage && (
         <button
           className="flex items-center gap-1 rounded-lg bg-primary px-6 py-1 font-bold text-primary-foreground disabled:bg-foreground/20 disabled:text-background"
-          disabled
+          disabled={furthestStage.id !== finalStage.id}
         >
           <span>Submit</span>
           <Check className="h-4 w-4" />

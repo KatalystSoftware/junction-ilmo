@@ -1,23 +1,25 @@
+import { useEffect } from "react";
 import z from "zod";
 import { ValidationSchema } from "@/components/form";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { FormRow } from "@/components/form-row";
 
-export const stageFiveSchema = z
-  .object({
-    birthday: z
-      .string()
-      .min(1, { message: "Your horoscope must match your birthday" }),
-    horoscope: z
-      .string()
-      .min(1, { message: "Your horoscope must match your birthday" }),
-    chineseHoroscope: z
-      .string()
-      .min(1, { message: "Your Chinese horoscope must match your birthday" }),
-    weekday: z
-      .string()
-      .min(1, { message: "Weekday must match the weekday you were born" }),
-  })
+const stageFields = z.object({
+  birthday: z
+    .string()
+    .min(1, { message: "Your horoscope must match your birthday" }),
+  horoscope: z
+    .string()
+    .min(1, { message: "Your horoscope must match your birthday" }),
+  chineseHoroscope: z
+    .string()
+    .min(1, { message: "Your Chinese horoscope must match your birthday" }),
+  weekday: z
+    .string()
+    .min(1, { message: "Weekday must match the weekday you were born" }),
+});
+
+export const stageFiveSchema = stageFields
   .refine(
     (data) => {
       const findSign = (date: Date) => {
@@ -135,13 +137,32 @@ export const stageFiveSchema = z
     },
   );
 
+const stageSchemaKeys = Object.keys(stageFields.shape);
+
 export function StageFive({
+  touchedFields,
   register,
   errors,
+  onPassStage,
 }: {
+  touchedFields: Partial<Readonly<{ [K in keyof ValidationSchema]?: boolean }>>;
   register: UseFormRegister<ValidationSchema>;
   errors: FieldErrors<ValidationSchema>;
+  onPassStage: () => void;
 }) {
+  useEffect(() => {
+    const hasStageErrors = stageSchemaKeys.some(
+      (key) => !!errors[key as keyof typeof errors],
+    );
+    const hasTouchedAllStageValues = stageSchemaKeys.every(
+      (key) => !!touchedFields[key as keyof typeof touchedFields],
+    );
+
+    if (hasTouchedAllStageValues && !hasStageErrors) {
+      onPassStage();
+    }
+  }, [errors, touchedFields, onPassStage]);
+
   return (
     <>
       <FormRow
